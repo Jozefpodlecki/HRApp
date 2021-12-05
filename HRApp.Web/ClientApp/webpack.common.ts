@@ -27,6 +27,7 @@ const config: Configuration = {
             "png",
             "svg",
             "jpg",
+            "jfif",
             "gif",
             "mp3",
         ],
@@ -39,10 +40,15 @@ const config: Configuration = {
                 loader: "ts-loader",
             },
             {
-                test: /\.(png|jpe?g|gif|mp3)$/i,
+                test: /\.(png|jpe?g|gif|jfif|mp3)$/i,
                 type: "asset/resource",
             },
         ],
+    },
+    optimization: {
+        splitChunks: {
+            chunks: "all",
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({

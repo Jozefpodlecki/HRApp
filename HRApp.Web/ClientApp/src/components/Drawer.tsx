@@ -1,22 +1,14 @@
+import { Link } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import CssBaseline from "@mui/material/CssBaseline";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
+import HomeIcon from "@mui/icons-material/Home";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
-import MenuIcon from "@mui/icons-material/Menu";
-import MuiAppBar from "@mui/material/AppBar";
 import React, { FunctionComponent } from "react";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
     display: "flex",
@@ -50,9 +42,20 @@ const DrawerComp: FunctionComponent<Props> = ({ width }) => {
             <DrawerHeader></DrawerHeader>
             <Divider />
             <List>
-                <ListItem button key={"Applications"}>
+                <ListItem button key={"Home"} component={Link} to="/">
                     <ListItemIcon>
-                        <InboxIcon />
+                        <HomeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Home"} />
+                </ListItem>
+                <ListItem
+                    button
+                    key={"Applications"}
+                    component={Link}
+                    to="/list"
+                >
+                    <ListItemIcon>
+                        <AssignmentIcon />
                     </ListItemIcon>
                     <ListItemText primary={"Applications"} />
                 </ListItem>

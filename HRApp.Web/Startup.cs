@@ -2,6 +2,8 @@ using HRApp.Common;
 using HRApp.DAL;
 using HRApp.DAL.Repositories;
 using HRApp.Web.Configuration;
+using HRApp.Web.Hubs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -12,11 +14,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace HRApp.Web
 {
@@ -35,6 +40,45 @@ namespace HRApp.Web
             var jwtConfiguration = Configuration
                .GetSection("Jwt")
                .Get<JwtConfiguration>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtConfiguration.Issuer,
+                        ValidAudience = jwtConfiguration.Issuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.SecretKey)),
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments("/hubs/chat")))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+            services.AddAuthorization(op =>
+            {
+                op.AddPolicy(Policies.Authorized, policy =>
+                {
+                    policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+                });
+            });
 
             services.AddControllers()
                .AddJsonOptions(options => {});
@@ -74,16 +118,29 @@ namespace HRApp.Web
             });
 
             services.AddSignalR();
-            services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("database"));
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddDbContext(Configuration.GetConnectionString("Default"));
+            services.AddRepositories();
             services.AddSystemClock();
+            services.AddTimer();
+            services.AddScoped<TestDataGenerator>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
+                var serviceScopeFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
+                using var serviceScope = serviceScopeFactory.CreateScope();
+                var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var testDataGenerator = serviceScope.ServiceProvider.GetRequiredService<TestDataGenerator>();
+                var created = context.Database.EnsureCreatedAsync().GetAwaiter().GetResult();
+
+                if (created)
+                {
+                    testDataGenerator.RunAsync().GetAwaiter().GetResult();
+                }
+
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -103,9 +160,10 @@ namespace HRApp.Web
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(pr =>
+            app.UseEndpoints(endpoints =>
             {
-                pr.MapControllers();
+                endpoints.MapHub<HRAppHub>("/signalr");
+                endpoints.MapControllers();
             });
             //app.UseSwagger();
             //app.UseSwaggerUI(options =>

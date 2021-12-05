@@ -1,7 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace TestCI.Web.Models
+namespace HRApp.Web.Models
 {
     public class AnnualLeaveRequest
     {

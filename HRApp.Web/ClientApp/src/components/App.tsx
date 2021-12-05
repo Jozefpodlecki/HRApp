@@ -3,9 +3,10 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "hooks";
 import { verifyToken } from "slices/auth";
 import Background from "./Background";
-import Dashboard from "components/Dashboard";
+import Dashboard from "components/Portal";
 import Login from "components/LoginForm";
 import LoginPage from "./LoginPage";
+import NotificationManager from "./NotificationManager";
 import React, { FunctionComponent, useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 
@@ -42,21 +43,26 @@ const App: FunctionComponent = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (!isAuthenticated) {
+            return;
+        }
+    }, [isAuthenticated]);
+
+    useEffect(() => {
         dispatch(verifyToken());
     }, []);
 
     return (
         <Main>
             <GlobalStyle />
+            <NotificationManager />
             {isAuthenticating ? (
                 <>
                     <Background />
                     <CircleLoader color="white" />
                 </>
             ) : isAuthenticated ? (
-                <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                </Routes>
+                <Dashboard />
             ) : (
                 <>
                     <Background />

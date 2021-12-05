@@ -14,7 +14,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRApp.Web", "HRApp.Web\HRAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRApp.DAL", "HRApp.DAL\HRApp.DAL.csproj", "{ED24EF99-7DF7-4957-94B5-5CB9EF9F563D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{89AA9B9E-A37C-490C-B07B-AF736A5A90D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{89AA9B9E-A37C-490C-B07B-AF736A5A90D9}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Schema", "Schema\Schema.sqlproj", "{D5A97D37-E848-468C-9977-AD23D3212504}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,15 @@ Global
 		{89AA9B9E-A37C-490C-B07B-AF736A5A90D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89AA9B9E-A37C-490C-B07B-AF736A5A90D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89AA9B9E-A37C-490C-B07B-AF736A5A90D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.CI|Any CPU.ActiveCfg = Release|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.CI|Any CPU.Build.0 = Release|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.CI|Any CPU.Deploy.0 = Release|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5A97D37-E848-468C-9977-AD23D3212504}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

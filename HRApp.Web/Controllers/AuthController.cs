@@ -1,8 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HRApp.Common;
+using HRApp.DAL.Repositories;
+using HRApp.Web.Configuration;
+using HRApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace HRApp.Web.Controllers
@@ -12,10 +21,52 @@ namespace HRApp.Web.Controllers
     [Produces("application/json")]
     public class AuthController : ControllerBase
     {
+        private readonly IOptionsMonitor<JwtConfiguration> _config;
+        private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly IJwtBuilder _jwtBuilder;
 
-        public AuthController()
+        public AuthController(
+            IOptionsMonitor<JwtConfiguration> config,
+            IUserRepository userRepository,
+            IPasswordHasher passwordHasher,
+            IJwtBuilder jwtBuilder)
         {
-            
+            _config = config;
+            _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
+            _jwtBuilder = jwtBuilder;
         }
+
+        [HttpPost, AllowAnonymous]
+        public async Task<IActionResult> CreateToken([FromBody] Login model)
+        {
+            var user = await _userRepository.GetByEmailAsync(model.Email);
+
+            if(user == null)
+            {
+                ModelState.AddModelError(".", "Invalid user or password");
+                return BadRequest();
+            }
+
+            var passwordHash = _passwordHasher.ComputeHash(model.Password, user.PasswordHashSalt);
+
+            if(!_passwordHasher.Compare(passwordHash, user.PasswordHash))
+            {
+                ModelState.AddModelError(".", "Invalid user or password");
+                return BadRequest();
+            }
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Email, model.Email),
+                new Claim(nameof(IUserContext.UserId), user.Id.ToString()),
+            };
+
+            var tokenData = _jwtBuilder.Build(_config.CurrentValue.TokenExpiry, claims);
+            return Ok(tokenData);
+        }
+
+       
     }
 }

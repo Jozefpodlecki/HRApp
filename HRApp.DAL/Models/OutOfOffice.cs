@@ -14,5 +14,13 @@ namespace HRApp.DAL.Models
         public DateTime CreatedOn { get; set; }
 
         public virtual User User { get; set; }
+
+        public TimeSpan? Time { get; set; }
+
+        public DateTime? Date { get; set; }
+
+        public DateTime? DateFrom { get; set; }
+
+        public DateTime? DateTo { get; set; }
     }
 }

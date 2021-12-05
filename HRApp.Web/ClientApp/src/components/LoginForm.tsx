@@ -28,14 +28,11 @@ const Login: FunctionComponent = () => {
 
     const onClick = async () => {
         setState((state) => ({ ...state, isSubmitting: true }));
-        const hasAuthenticated = await signInWithEmailAndPassword(
-            email,
-            password
-        );
+        const tokenData = await signInWithEmailAndPassword(email, password);
 
-        if (hasAuthenticated) {
+        if (tokenData) {
             navigate("/");
-            dispatch(signInSuccess());
+            dispatch(signInSuccess(tokenData));
             return;
         }
 

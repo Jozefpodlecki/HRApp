@@ -27,12 +27,12 @@ export const signInWithEmailAndPassword = async (
     });
 
     if (signInResult.status === 400) {
-        return false;
+        return null;
     }
 
     const tokenData = signInResult.data;
 
     localStorage.setItem("jwt", JSON.stringify(tokenData));
 
-    return true;
+    return tokenData;
 };

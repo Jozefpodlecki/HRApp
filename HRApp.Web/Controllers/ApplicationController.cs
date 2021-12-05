@@ -1,0 +1,87 @@
+﻿using HRApp.Common;
+using HRApp.DAL.Models;
+using HRApp.DAL.Repositories;
+using HRApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+
+namespace HRApp.Web.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Authorize]
+    public class ApplicationController : ControllerBase
+    {
+        private readonly IApplicationRepository _applicationRepository;
+        private readonly IOutOfOfficeRepository _outOfOfficeRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly ISystemClock _systemClock;
+        private readonly IUserContext _userContext;
+
+        public ApplicationController(
+            IApplicationRepository applicationRepository,
+            IOutOfOfficeRepository outOfOfficeRepository,
+            IPersonRepository personRepository,
+            ISystemClock systemClock,
+            IUserContext userContext)
+        {
+            _applicationRepository = applicationRepository;
+            _outOfOfficeRepository = outOfOfficeRepository;
+            _personRepository = personRepository;
+            _systemClock = systemClock;
+            _userContext = userContext;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetForPersonAsync(Guid personId, int top = 10, int offset = 0)
+        {
+            var result = await _applicationRepository.GetForPersonAsync(personId, top, offset);
+
+            return Ok(result);
+        }
+
+        [HttpPost("annual-leave")]
+        public async Task<IActionResult> CreateAnnualLeaveApplication(AnnualLeaveRequest model)
+        {
+            var userId = _userContext.UserId.Value;
+
+            var application = new AnnualLeaveApplication
+            {
+                CreatedOn = _systemClock.UtcNow,
+                CreatedById = userId,
+                DateFrom = model.DateFrom,
+                DateTo = model.DateTo,
+                Date = model.Date,
+                Time = model.Time,
+            };
+
+            var result = await _applicationRepository.CreateAsync(application);
+
+            return Ok(result);
+        }
+
+        [HttpPost("annual-leave/accept/{id}")]
+        public async Task<IActionResult> AcceptAnnualLeaveApplication(int id)
+        {
+            var result = await _applicationRepository.GetByIdAsync(id);
+
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            var outofOffice = new OutOfOffice
+            {
+
+            };
+
+            await _outOfOfficeRepository.CreateAsync(outofOffice);
+
+            return Ok(result);
+        }
+    }
+}

@@ -28,8 +28,4 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\HRApp.DAL\HRApp.DAL.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="HostedService\" />
-  </ItemGroup>
 </Project>
