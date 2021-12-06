@@ -22,6 +22,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using RabbitMQ.Client.Core.DependencyInjection;
+using HRApp.Web.MessageHandlers;
+using HRApp.Web.HostedService;
+using RabbitMQ.Client.Core.DependencyInjection.Services;
+using HRApp.Web.Messages;
 
 namespace HRApp.Web
 {
@@ -121,9 +126,14 @@ namespace HRApp.Web
             services.AddDbContext(Configuration.GetConnectionString("Default"));
             services.AddRepositories();
             services.AddSystemClock();
+            services.AddTaskManager();
             services.AddTimer();
+            services.AddHostedService<GenerateTestDataHostedService>();
             services.AddScoped<TestDataGenerator>();
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.AddRabbitMqClient(Configuration.GetSection("RabbitMq"))
+                .AddConsumptionExchange("applications", Configuration.GetSection("RabbitMqExchange"))
+                .AddAsyncMessageHandlerSingleton<NotifySignalRMessageHandler>("*.*.key");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -132,9 +142,12 @@ namespace HRApp.Web
             {
                 var serviceScopeFactory = app.ApplicationServices.GetService<IServiceScopeFactory>();
                 using var serviceScope = serviceScopeFactory.CreateScope();
-                var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-                var testDataGenerator = serviceScope.ServiceProvider.GetRequiredService<TestDataGenerator>();
-                var created = context.Database.EnsureCreatedAsync().GetAwaiter().GetResult();
+                var serviceProvider = serviceScope.ServiceProvider;
+                var databaseFacade = serviceProvider.GetRequiredService<AppDbContext>().Database;
+                var testDataGenerator = serviceProvider.GetRequiredService<TestDataGenerator>();
+                var queueService = serviceProvider.GetRequiredService<IQueueService>();
+
+                var created = databaseFacade.EnsureCreatedAsync().GetAwaiter().GetResult();
 
                 if (created)
                 {

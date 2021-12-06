@@ -101,24 +101,27 @@ namespace HRApp.DAL
             {
                 Id = adminUser.Id,
                 HierarchyId = HierarchyId.Parse("/"),
+                CreatedOn = utcNow,
             };
 
             var manager = new Person()
             {
-                Id = adminUser.Id,
+                Id = managerUser.Id,
                 HierarchyId = HierarchyId.Parse("/1/"),
+                CreatedOn = utcNow,
             };
 
             var employee1 = new Person()
             {
-                Id = adminUser.Id,
-                HierarchyId = HierarchyId.Parse("/1/1"),
+                Id = employeeUser1.Id,
+                HierarchyId = HierarchyId.Parse("/1/1/"),
+                CreatedOn = utcNow,
             };
 
             var employee2 = new Person()
             {
-                Id = adminUser.Id,
-                HierarchyId = HierarchyId.Parse("/1/2"),
+                Id = employeeUser2.Id,
+                HierarchyId = HierarchyId.Parse("/1/2/"),
             };
 
             _appDbContext.People.AddRange(new[] { admin, manager, employee1, employee2 });
@@ -127,6 +130,7 @@ namespace HRApp.DAL
             var application = new AnnualLeaveApplication
             {
                 CreatedById = employee1.Id,
+                CreatedOn = utcNow,
                 Date = utcNow.Date.AddDays(5),
             };
 

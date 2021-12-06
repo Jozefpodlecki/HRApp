@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using RabbitMQ.Client.Core.DependencyInjection.Services;
+using HRApp.Web.Messages;
 
 namespace HRApp.Web.Controllers
 {
@@ -21,6 +23,7 @@ namespace HRApp.Web.Controllers
         private readonly IPersonRepository _personRepository;
         private readonly ISystemClock _systemClock;
         private readonly IUserContext _userContext;
+        private readonly IQueueService _queueService;
 
         public ApplicationController(
             IApplicationRepository applicationRepository,
@@ -60,6 +63,14 @@ namespace HRApp.Web.Controllers
             };
 
             var result = await _applicationRepository.CreateAsync(application);
+
+            var message = new NewAnnualLeave
+            {
+                ApplicationId = application.Id,
+                PersonId = userId,
+            };
+
+            await _queueService.SendAsync(message, string.Empty, NewAnnualLeave.RouteKey);
 
             return Ok(result);
         }

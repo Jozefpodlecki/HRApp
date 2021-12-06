@@ -3,6 +3,8 @@ import { merge } from "webpack-merge";
 import { resolve } from "path";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import common from "./webpack.common";
+import fs from "fs";
+import path from "path";
 
 const environment = "development";
 process.env.NODE_ENV = environment;
@@ -13,16 +15,15 @@ const config: Configuration = merge(common, {
     devServer: {
         hot: true,
         server: {
-            // type: "https",
-            // options: {
-            //     pfx: "./localhost.pfx",
-            //     passphrase: "abc123",
-            //     requestCert: true,
-            // },
+            type: "https",
+            options: {
+                pfx: fs.readFileSync(path.resolve(__dirname, "localhost.pfx")),
+                passphrase: "abc123",
+            },
         },
         port: 9000,
         historyApiFallback: true,
-    } as any,
+    },
     module: {
         rules: [
             {
