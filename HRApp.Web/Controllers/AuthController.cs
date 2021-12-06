@@ -2,6 +2,7 @@
 using HRApp.DAL.Repositories;
 using HRApp.Web.Configuration;
 using HRApp.Web.Models;
+using HRApp.Web.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,7 @@ namespace HRApp.Web.Controllers
 
             if(user == null)
             {
-                ModelState.AddModelError(".", "Invalid user or password");
+                ModelState.AddModelError(".", Strings.InvalidUserOrPassword);
                 return BadRequest();
             }
 
@@ -53,7 +54,7 @@ namespace HRApp.Web.Controllers
 
             if(!_passwordHasher.Compare(passwordHash, user.PasswordHash))
             {
-                ModelState.AddModelError(".", "Invalid user or password");
+                ModelState.AddModelError(".", Strings.InvalidUserOrPassword);
                 return BadRequest();
             }
 
@@ -63,7 +64,9 @@ namespace HRApp.Web.Controllers
                 new Claim(nameof(IUserContext.UserId), user.Id.ToString()),
             };
 
-            var tokenData = _jwtBuilder.Build(_config.CurrentValue.TokenExpiry, claims);
+            var tokenExpiry = _config.CurrentValue.TokenExpiry;
+
+            var tokenData = _jwtBuilder.Build(tokenExpiry, claims);
             return Ok(tokenData);
         }
 

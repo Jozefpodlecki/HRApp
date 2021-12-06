@@ -26,7 +26,7 @@ namespace HRApp.Web.Controllers
         public async Task<IActionResult> GetRolesForUserAsync()
         {
             var userId = _userContext.UserId.Value;
-            var result = await _userRepository.GetRolesForUser(userId);
+            var result = await _userRepository.GetRolesForUserAsync(userId);
 
             return Ok(result);
         }

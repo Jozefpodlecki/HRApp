@@ -39,8 +39,11 @@ namespace HRApp.Web.Controllers
             _userContext = userContext;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetForPersonAsync(Guid personId, int top = 10, int offset = 0)
+        [HttpGet("{personId}/assigned")]
+        public async Task<IActionResult> GetForPersonAsync(
+            [FromRoute] Guid personId,
+            [FromQuery] int top = 10,
+            [FromQuery] int offset = 0)
         {
             var result = await _applicationRepository.GetForPersonAsync(personId, top, offset);
 
@@ -48,7 +51,7 @@ namespace HRApp.Web.Controllers
         }
 
         [HttpPost("annual-leave")]
-        public async Task<IActionResult> CreateAnnualLeaveApplication(AnnualLeaveRequest model)
+        public async Task<IActionResult> CreateAnnualLeaveApplication(NewAnnualLeaveApplication model)
         {
             var userId = _userContext.UserId.Value;
 

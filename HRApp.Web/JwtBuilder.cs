@@ -26,10 +26,10 @@ namespace HRApp.Web
         {
             _encoding = encoding;
             _systemClock = systemClock;
+            _options = options;
             var securityKey = new SymmetricSecurityKey(_encoding.GetBytes(_options.CurrentValue.SecretKey));
             _signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             _securityTokenHandler = new JwtSecurityTokenHandler();
-            _options = options;
         }
 
         public TokenData Build(TimeSpan expiresOn, params Claim[] claims)
@@ -47,7 +47,7 @@ namespace HRApp.Web
             return new TokenData()
             {
                 Token = _securityTokenHandler.WriteToken(token),
-                Expire = token.ValidTo
+                ExpiresOn = token.ValidTo
             };
         }
     }

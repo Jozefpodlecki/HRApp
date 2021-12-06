@@ -10,6 +10,6 @@ namespace HRApp.DAL.Repositories
     {
         Task<User?> GetByEmailAsync(string email);
 
-        Task<IEnumerable<Role>> GetRolesForUser(Guid userId);
+        Task<IEnumerable<Role>> GetRolesForUserAsync(Guid userId);
     }
 }

@@ -22,8 +22,11 @@ namespace HRApp.Web.Controllers
             _personRepository = personRepository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetForPersonAsync(Guid personId, int top = 10, int offset = 0)
+        [HttpGet("{personId}/members")]
+        public async Task<IActionResult> GetForPersonAsync(
+            [FromRoute] Guid personId,
+            [FromQuery] int top = 10,
+            [FromQuery] int offset = 0)
         {
             var result = await _personRepository.GetForPersonIdAsync(personId, top, offset);
 

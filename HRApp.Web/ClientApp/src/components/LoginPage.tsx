@@ -1,6 +1,5 @@
 import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Background from "components/Background";
 import Login from "components/LoginForm";
 import React, { FunctionComponent } from "react";
 

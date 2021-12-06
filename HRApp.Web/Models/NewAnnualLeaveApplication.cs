@@ -2,7 +2,7 @@
 
 namespace HRApp.Web.Models
 {
-    public class AnnualLeaveRequest
+    public class NewAnnualLeaveApplication
     {
         public TimeSpan? Time { get; set; }
         public DateTime? Date { get; set; }

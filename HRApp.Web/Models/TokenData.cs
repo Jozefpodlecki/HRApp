@@ -6,6 +6,6 @@ namespace HRApp.Web.Models
     {
         public string Token { get; set; }
 
-        public DateTime Expire { get; set; }
+        public DateTime ExpiresOn { get; set; }
     }
 }

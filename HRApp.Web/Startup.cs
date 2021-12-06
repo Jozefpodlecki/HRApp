@@ -130,10 +130,13 @@ namespace HRApp.Web
             services.AddTimer();
             services.AddHostedService<GenerateTestDataHostedService>();
             services.AddScoped<TestDataGenerator>();
+            services.AddSingleton(Encoding.UTF8);
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.AddSingleton<IJwtBuilder, JwtBuilder>();
+            services.Configure<JwtConfiguration>(Configuration.GetSection("Jwt"));
             services.AddRabbitMqClient(Configuration.GetSection("RabbitMq"))
                 .AddConsumptionExchange("applications", Configuration.GetSection("RabbitMqExchange"))
-                .AddAsyncMessageHandlerSingleton<NotifySignalRMessageHandler>("*.*.key");
+                .AddAsyncMessageHandlerSingleton<NotifySignalRMessageHandler>("*", "applications");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

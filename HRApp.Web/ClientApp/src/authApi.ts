@@ -13,15 +13,7 @@ export const signInWithEmailAndPassword = async (
     email: string,
     password: string
 ) => {
-    const fakeTokenData = {
-        jwt: "fake token",
-        expiresOn: DateTime.now().plus({ hours: 1 }).toISO(),
-    };
-
-    localStorage.setItem("jwt", JSON.stringify(fakeTokenData));
-    return Promise.resolve(fakeTokenData);
-
-    const signInResult = await axios.post<TokenData>("api/auth/token", {
+    const signInResult = await axios.post<TokenData>("api/auth", {
         email,
         password,
     });

@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using HRApp.Web;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TestCI;
-using TestCI.Web;
 
 namespace Sanakan.Web.Tests
 {
