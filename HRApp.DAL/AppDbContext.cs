@@ -34,6 +34,8 @@ namespace HRApp.DAL
 
         public DbSet<UserRole> UserRoles { get; set; } = null;
 
+        public DbSet<Account> Accounts { get; set; } = null;
+
         public DbSet<StatutorySickPayApplication> StatutorySickPayApplications { get; set; } = null;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

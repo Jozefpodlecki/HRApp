@@ -9,12 +9,13 @@
   </PropertyGroup>
 
    <ItemGroup>
+     <PackageReference Include="EntityFrameworkCore.InMemory.HierarchyId" Version="2.1.1" />
+     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\TestCI.DAL\TestCI.DAL.csproj" />
-  </ItemGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\..\HRApp.DAL\HRApp.DAL.csproj" />
+   </ItemGroup>
 
 </Project>

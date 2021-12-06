@@ -20,8 +20,14 @@ namespace HRApp.DAL.Models
 
         public Guid Id { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         [StringLength(30)]
         public string Email { get; set; } = string.Empty;
+
+        public string Surname { get; set; } = string.Empty;
+
+        public string Forename { get; set; } = string.Empty;
 
         public byte[] PasswordHashSalt { get; set; } = Array.Empty<byte>();
 

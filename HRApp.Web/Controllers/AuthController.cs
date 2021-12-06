@@ -47,7 +47,7 @@ namespace HRApp.Web.Controllers
             if(user == null)
             {
                 ModelState.AddModelError(".", Strings.InvalidUserOrPassword);
-                return BadRequest();
+                return ValidationProblem();
             }
 
             var passwordHash = _passwordHasher.ComputeHash(model.Password, user.PasswordHashSalt);
@@ -55,7 +55,7 @@ namespace HRApp.Web.Controllers
             if(!_passwordHasher.Compare(passwordHash, user.PasswordHash))
             {
                 ModelState.AddModelError(".", Strings.InvalidUserOrPassword);
-                return BadRequest();
+                return ValidationProblem();
             }
 
             var claims = new[]

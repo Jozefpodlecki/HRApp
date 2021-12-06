@@ -17,7 +17,7 @@ const MainPage: FunctionComponent = () => {
     return (
         <Box sx={{ margin: 1, width: "100%" }}>
             <Typography variant="h4" component="div">
-                Applications
+                Create new application
             </Typography>
             <Grid container spacing={2} margin={1}>
                 <Grid item xs={3} sx={{ minWidth: 345 }}>

@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
+import { useSelector } from "hooks";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import HomeIcon from "@mui/icons-material/Home";
@@ -8,6 +10,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import PeopleIcon from "@mui/icons-material/People";
 import React, { FunctionComponent } from "react";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -24,6 +27,9 @@ type Props = {
 
 const DrawerComp: FunctionComponent<Props> = ({ width }) => {
     const theme = useTheme();
+    const { isAdmin, isManager, isEmployee } = useSelector(
+        (state) => state.permission
+    );
 
     return (
         <Drawer
@@ -42,23 +48,64 @@ const DrawerComp: FunctionComponent<Props> = ({ width }) => {
             <DrawerHeader></DrawerHeader>
             <Divider />
             <List>
+                {isAdmin ? (
+                    <ListItem
+                        button
+                        key={"Statistics"}
+                        component={Link}
+                        to="/statistics"
+                    >
+                        <ListItemIcon>
+                            <BarChartIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Statistics"} />
+                    </ListItem>
+                ) : null}
                 <ListItem button key={"Home"} component={Link} to="/">
                     <ListItemIcon>
                         <HomeIcon />
                     </ListItemIcon>
                     <ListItemText primary={"Home"} />
                 </ListItem>
-                <ListItem
-                    button
-                    key={"Applications"}
-                    component={Link}
-                    to="/list"
-                >
-                    <ListItemIcon>
-                        <AssignmentIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={"Applications"} />
-                </ListItem>
+                {isManager ? (
+                    <ListItem
+                        button
+                        key={"Employees"}
+                        component={Link}
+                        to="/employees"
+                    >
+                        <ListItemIcon>
+                            <PeopleIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Employees"} />
+                    </ListItem>
+                ) : null}
+                {isManager ? (
+                    <ListItem
+                        button
+                        key={"Applications"}
+                        component={Link}
+                        to="/applications"
+                    >
+                        <ListItemIcon>
+                            <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"Applications"} />
+                    </ListItem>
+                ) : null}
+                {isEmployee ? (
+                    <ListItem
+                        button
+                        key={"My Applications"}
+                        component={Link}
+                        to="/my-applications"
+                    >
+                        <ListItemIcon>
+                            <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={"My Applications"} />
+                    </ListItem>
+                ) : null}
             </List>
             <Divider />
         </Drawer>

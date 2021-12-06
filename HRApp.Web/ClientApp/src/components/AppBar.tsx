@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { signOut } from "slices/auth";
 import { styled, useTheme } from "@mui/material/styles";
 import { useDispatch } from "hooks";
@@ -34,9 +34,11 @@ const AppBar = styled(MuiAppBar, {
 const AppBarComp: FunctionComponent = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement>(null);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const onSignOut = () => {
         dispatch(signOut());
+        navigate("/");
     };
 
     const onMenuOpen = (event: MouseEvent<HTMLElement>) => {

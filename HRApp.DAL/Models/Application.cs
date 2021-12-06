@@ -10,6 +10,8 @@ namespace HRApp.DAL.Models
     {
         public int Id { get; set; }
 
+        public string Name { get; set; } = string.Empty;
+
         public bool isAccepted { get; set; }
 
         public DateTime CreatedOn { get; set; }
@@ -17,5 +19,7 @@ namespace HRApp.DAL.Models
         public Guid CreatedById { get; set; }
 
         public virtual Person CreatedBy { get; set; }
+
+        public string CreatedByName { get; set; } = string.Empty;
     }
 }

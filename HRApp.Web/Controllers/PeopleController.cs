@@ -16,18 +16,22 @@ namespace HRApp.Web.Controllers
     public class PeopleController : ControllerBase
     {
         private readonly IPersonRepository _personRepository;
+        private readonly IUserContext _userContext;
 
-        public PeopleController(IPersonRepository personRepository)
+        public PeopleController(
+            IPersonRepository personRepository,
+            IUserContext userContext)
         {
             _personRepository = personRepository;
+            _userContext = userContext;
         }
 
-        [HttpGet("{personId}/members")]
+        [HttpGet("members")]
         public async Task<IActionResult> GetForPersonAsync(
-            [FromRoute] Guid personId,
             [FromQuery] int top = 10,
             [FromQuery] int offset = 0)
         {
+            var personId = _userContext.UserId.Value;
             var result = await _personRepository.GetForPersonIdAsync(personId, top, offset);
 
             return Ok(result);

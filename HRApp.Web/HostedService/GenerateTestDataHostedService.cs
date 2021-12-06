@@ -76,7 +76,7 @@ namespace HRApp.Web.HostedService
 
             try
             {
-                using var serviceScope = _serviceScopeFactory.CreateAsyncScope();
+                using var serviceScope = _serviceScopeFactory.CreateScope();
                 var serviceProvider = serviceScope.ServiceProvider;
                 var appDbContext = serviceProvider.GetRequiredService<AppDbContext>();
 

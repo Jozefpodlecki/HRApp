@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 
@@ -26,6 +27,16 @@ namespace HRApp.Web
                 }
 
                 return userId;
+            }
+        }
+
+        public string? Email
+        {
+            get
+            {
+                var email = _user.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Email)?.Value;
+
+                return email;
             }
         }
     }

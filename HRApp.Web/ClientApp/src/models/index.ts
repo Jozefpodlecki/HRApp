@@ -9,3 +9,23 @@ export type Application = {
     createdBy: string;
     createdOn: string;
 };
+
+export type TokenData = {
+    expiresOn: string;
+    token: string;
+};
+
+export type Role = {
+    id: number;
+    name: string;
+};
+
+export type ErrorResponse = {
+    type: string;
+    title: string;
+    status: number;
+    traceId: string;
+    errors: Record<string, string[]>;
+};
+
+export const systemErrorKey = "";

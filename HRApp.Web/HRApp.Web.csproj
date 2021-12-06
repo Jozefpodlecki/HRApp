@@ -31,6 +31,10 @@
     <ProjectReference Include="..\HRApp.DAL\HRApp.DAL.csproj" />
   </ItemGroup>
 
+  <!--<Target Name="AfterBuild">
+    <Exec Condition="$(Configuration) == 'Debug'" Command="npm run start" />
+  </Target>-->
+
   <ItemGroup>
     <Compile Update="Resources\Strings.Designer.cs">
       <DesignTime>True</DesignTime>

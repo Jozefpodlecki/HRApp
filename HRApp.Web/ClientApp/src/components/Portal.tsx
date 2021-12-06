@@ -7,6 +7,7 @@ import Drawer from "components/Drawer";
 import MainPage from "./MainPage";
 import React, { FunctionComponent, MouseEvent, useState } from "react";
 import styled from "styled-components";
+import Employees from "./Employees";
 
 const drawerWidth = 300;
 
@@ -29,7 +30,12 @@ const Portal: FunctionComponent = () => {
                 <Drawer width={drawerWidth} />
                 <Routes>
                     <Route path="/" element={<MainPage />} />
-                    <Route path="/list" element={<ApplicationList />} />
+                    <Route path="/employees" element={<Employees />} />
+                    <Route path="/applications" element={<ApplicationList />} />
+                    <Route
+                        path="/my-applications"
+                        element={<ApplicationList />}
+                    />
                     <Route
                         path="/annual-leave/new"
                         element={<AnnualLeaveForm />}

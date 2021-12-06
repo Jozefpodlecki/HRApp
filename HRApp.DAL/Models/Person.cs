@@ -17,6 +17,10 @@ namespace HRApp.DAL.Models
 
         public HierarchyId HierarchyId { get; set; }
 
+        public virtual Account Account { get; set; }
+
+        public virtual Guid AccountId { get; set; }
+
         public virtual ICollection<OutOfOffice> OutOfOffice { get; set; } = new Collection<OutOfOffice>();
 
         public virtual ICollection<Application> Applications { get; set; } = new Collection<Application>();

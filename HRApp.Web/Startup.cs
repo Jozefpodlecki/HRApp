@@ -122,6 +122,7 @@ namespace HRApp.Web
                 options.CustomSchemaIds(x => x.FullName);
             });
 
+            services.AddHttpContextAccessor();
             services.AddSignalR();
             services.AddDbContext(Configuration.GetConnectionString("Default"));
             services.AddRepositories();
@@ -133,6 +134,7 @@ namespace HRApp.Web
             services.AddSingleton(Encoding.UTF8);
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
             services.AddSingleton<IJwtBuilder, JwtBuilder>();
+            services.AddSingleton<IUserContext, UserContext>();
             services.Configure<JwtConfiguration>(Configuration.GetSection("Jwt"));
             services.AddRabbitMqClient(Configuration.GetSection("RabbitMq"))
                 .AddConsumptionExchange("applications", Configuration.GetSection("RabbitMqExchange"))

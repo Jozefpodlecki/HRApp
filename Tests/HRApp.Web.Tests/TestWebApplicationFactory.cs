@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace Sanakan.Web.Tests
 {
@@ -14,6 +15,8 @@ namespace Sanakan.Web.Tests
             builder.ConfigureAppConfiguration(config =>
             {
                 var configurationBuilder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .Build();
 
                 config.AddConfiguration(configurationBuilder);

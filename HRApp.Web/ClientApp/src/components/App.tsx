@@ -1,10 +1,10 @@
 import { CircleLoader } from "react-spinners";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { getRolesAction } from "slices/permission";
 import { useDispatch, useSelector } from "hooks";
 import { verifyToken } from "slices/auth";
 import Background from "./Background";
 import Dashboard from "components/Portal";
-import Login from "components/LoginForm";
 import LoginPage from "./LoginPage";
 import NotificationManager from "./NotificationManager";
 import React, { FunctionComponent, useEffect } from "react";
@@ -40,13 +40,20 @@ const App: FunctionComponent = () => {
     const { isAuthenticating, isAuthenticated } = useSelector(
         (state) => state.auth
     );
+    const { isLoading: isLoadingRoles } = useSelector(
+        (state) => state.permission
+    );
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (!isAuthenticated) {
             return;
         }
-    }, [isAuthenticated]);
+
+        if (isLoadingRoles) {
+            dispatch(getRolesAction());
+        }
+    }, [isAuthenticated, isLoadingRoles]);
 
     useEffect(() => {
         dispatch(verifyToken());
@@ -62,13 +69,20 @@ const App: FunctionComponent = () => {
                     <CircleLoader color="white" />
                 </>
             ) : isAuthenticated ? (
-                <Dashboard />
+                isLoadingRoles ? (
+                    <>
+                        <Background />
+                        <CircleLoader color="white" />
+                    </>
+                ) : (
+                    <Dashboard />
+                )
             ) : (
                 <>
                     <Background />
                     <Routes>
                         <Route path="/login" element={<LoginPage />} />
-                        <Route path="/" element={<Navigate to="/login" />} />
+                        <Route path="*" element={<Navigate to="/login" />} />
                     </Routes>
                 </>
             )}

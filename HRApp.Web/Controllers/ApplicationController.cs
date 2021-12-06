@@ -30,21 +30,23 @@ namespace HRApp.Web.Controllers
             IOutOfOfficeRepository outOfOfficeRepository,
             IPersonRepository personRepository,
             ISystemClock systemClock,
-            IUserContext userContext)
+            IUserContext userContext,
+            IQueueService queueService)
         {
             _applicationRepository = applicationRepository;
             _outOfOfficeRepository = outOfOfficeRepository;
             _personRepository = personRepository;
             _systemClock = systemClock;
             _userContext = userContext;
+            _queueService = queueService;
         }
 
-        [HttpGet("{personId}/assigned")]
+        [HttpGet("assigned")]
         public async Task<IActionResult> GetForPersonAsync(
-            [FromRoute] Guid personId,
             [FromQuery] int top = 10,
             [FromQuery] int offset = 0)
         {
+            var personId = _userContext.UserId.Value;
             var result = await _applicationRepository.GetForPersonAsync(personId, top, offset);
 
             return Ok(result);
@@ -59,6 +61,7 @@ namespace HRApp.Web.Controllers
             {
                 CreatedOn = _systemClock.UtcNow,
                 CreatedById = userId,
+                CreatedByName = _userContext.Email,
                 DateFrom = model.DateFrom,
                 DateTo = model.DateTo,
                 Date = model.Date,

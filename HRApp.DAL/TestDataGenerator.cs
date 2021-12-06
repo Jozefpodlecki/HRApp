@@ -33,6 +33,8 @@ namespace HRApp.DAL
                 CreatedOn = utcNow,
                 PasswordHash = passwordHash,
                 PasswordHashSalt = salt,
+                Forename = "Chrysanthos",
+                Surname = "Urban",
             };
 
             salt = _passwordHasher.ComputeSalt();
@@ -43,6 +45,8 @@ namespace HRApp.DAL
                 CreatedOn = utcNow,
                 PasswordHash = passwordHash,
                 PasswordHashSalt = salt,
+                Forename = "Arthur",
+                Surname = "Séamas",
             };
 
             salt = _passwordHasher.ComputeSalt();
@@ -53,6 +57,8 @@ namespace HRApp.DAL
                 CreatedOn = utcNow,
                 PasswordHash = passwordHash,
                 PasswordHashSalt = salt,
+                Forename = "Rein",
+                Surname = "Sherman",
             };
 
             salt = _passwordHasher.ComputeSalt();
@@ -63,6 +69,8 @@ namespace HRApp.DAL
                 CreatedOn = utcNow,
                 PasswordHash = passwordHash,
                 PasswordHashSalt = salt,
+                Forename = "Elton",
+                Surname = "Diarmuid",
             };
 
             _appDbContext.Users.AddRange(new[] { adminUser, managerUser, employeeUser1, employeeUser2 });
@@ -92,9 +100,28 @@ namespace HRApp.DAL
                     RoleId = managerRole.Id,
                     UserId = managerUser.Id,
                 },
+                  new UserRole
+                {
+                    RoleId = employeeRole.Id,
+                    UserId = managerUser.Id,
+                },
+                new UserRole
+                {
+                    RoleId = adminRole.Id,
+                    UserId = adminUser.Id,
+                },
+                new UserRole
+                {
+                    RoleId = managerRole.Id,
+                    UserId = adminUser.Id,
+                },
             };
 
             _appDbContext.UserRoles.AddRange(userRoles);
+            await _appDbContext.SaveChangesAsync();
+
+            var account = new Account("Company A");
+            _appDbContext.Accounts.Add(account);
             await _appDbContext.SaveChangesAsync();
 
             var admin = new Person()
@@ -102,6 +129,7 @@ namespace HRApp.DAL
                 Id = adminUser.Id,
                 HierarchyId = HierarchyId.Parse("/"),
                 CreatedOn = utcNow,
+                AccountId = account.Id,
             };
 
             var manager = new Person()
@@ -109,6 +137,7 @@ namespace HRApp.DAL
                 Id = managerUser.Id,
                 HierarchyId = HierarchyId.Parse("/1/"),
                 CreatedOn = utcNow,
+                AccountId = account.Id,
             };
 
             var employee1 = new Person()
@@ -116,12 +145,15 @@ namespace HRApp.DAL
                 Id = employeeUser1.Id,
                 HierarchyId = HierarchyId.Parse("/1/1/"),
                 CreatedOn = utcNow,
+                AccountId = account.Id,
             };
 
             var employee2 = new Person()
             {
                 Id = employeeUser2.Id,
                 HierarchyId = HierarchyId.Parse("/1/2/"),
+                CreatedOn = utcNow,
+                AccountId = account.Id,
             };
 
             _appDbContext.People.AddRange(new[] { admin, manager, employee1, employee2 });
@@ -130,6 +162,7 @@ namespace HRApp.DAL
             var application = new AnnualLeaveApplication
             {
                 CreatedById = employee1.Id,
+                CreatedByName = employeeUser1.Email,
                 CreatedOn = utcNow,
                 Date = utcNow.Date.AddDays(5),
             };

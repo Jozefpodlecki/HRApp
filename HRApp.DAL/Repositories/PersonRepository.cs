@@ -16,7 +16,10 @@ namespace HRApp.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Person>> GetForPersonIdAsync(Guid personId, int top = 10, int offset = 0)
+        public async Task<IEnumerable<Person>> GetForPersonIdAsync(
+            Guid personId,
+            int top = 10,
+            int offset = 0)
         {
             var person = await _dbContext.People.FindAsync(personId);
 

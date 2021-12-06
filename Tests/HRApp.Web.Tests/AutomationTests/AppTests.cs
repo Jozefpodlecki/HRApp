@@ -30,7 +30,7 @@ namespace HRApp.Web.Tests.AutomationTests
             var factory = new TestWebApplicationFactory();
             _client = factory.CreateClient();
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
+            //chromeOptions.AddArguments("headless");
             chromeOptions.AddArguments("start-maximized");
             _driver = new ChromeDriver(chromeOptions);
         }
