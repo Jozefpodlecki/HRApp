@@ -1,5 +1,10 @@
 # HR App #
 
+<p align="center">
+  <img src="demo-images\sign-in.png" width="350" title="hover text">
+  <img src="demo-images\main-portal.png" width="350" title="hover text">
+</p>
+
 Simple .net web app which keeps records of day offs.
 
 ![example workflow](https://github.com/jozefpodlecki/hrapp/actions/workflows/dotnet.yml/badge.svg)
